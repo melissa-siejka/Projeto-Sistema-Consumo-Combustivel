@@ -1,0 +1,8 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="Modelo Lógico - Projeto Combustivel" id="6B25A268-10F4-F660-5542-0FC864FE866B" version="3.5">
+<createdBy>melis</createdBy>
+<createdTime>2024-03-05 00:06:26 UTC</createdTime>
+<ownerDesignName>Modelo Lógico - Projeto Combustivel</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>6B25A268-10F4-F660-5542-0FC864FE866B</designId>
+</OSDM_Design>
