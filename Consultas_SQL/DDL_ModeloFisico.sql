@@ -1,5 +1,5 @@
 -- Gerado por Oracle SQL Developer Data Modeler 23.1.0.087.0806
---   em:        2024-03-15 23:16:51 BRT
+--   em:        2024-03-20 16:00:55 BRT
 --   site:      Oracle Database 11g
 --   tipo:      Oracle Database 11g
 
@@ -15,7 +15,7 @@ CREATE TABLE abastecimento (
     dt_abastecimento   DATE NOT NULL,
     cd_motorista       NUMBER(6) NOT NULL,
     cd_tipocombustivel NUMBER(3) NOT NULL,
-    cd_posto           NUMBER(6) NOT NULL,
+    cd_posto           NUMBER(4) NOT NULL,
     nr_hodometro       NUMBER(7) NOT NULL,
     qt_litros          NUMBER(5, 2) NOT NULL,
     vl_combustivel     NUMBER(5, 2) NOT NULL
@@ -37,7 +37,8 @@ CREATE TABLE motorista (
     cd_cargo        NUMBER(3) NOT NULL,
     dt_admissao     DATE NOT NULL,
     dt_desligamento DATE,
-    in_ativo        CHAR(1) NOT NULL
+    in_ativo        CHAR(1) NOT NULL,
+    id_pessoa       NUMBER(7) NOT NULL
 );
 
 ALTER TABLE motorista ADD CONSTRAINT motorista_pk PRIMARY KEY ( nr_matricula );
@@ -53,10 +54,11 @@ CREATE TABLE pessoa (
 ALTER TABLE pessoa ADD CONSTRAINT pessoa_pk PRIMARY KEY ( id_pessoa );
 
 CREATE TABLE posto_conveniado (
-    cd_posto       NUMBER(6) NOT NULL,
+    cd_posto       NUMBER(4) NOT NULL,
     dt_convenio    DATE NOT NULL,
     dt_desconvenio DATE,
-    in_ativo       CHAR(1) NOT NULL
+    in_ativo       CHAR(1) NOT NULL,
+    id_pessoa      NUMBER(7) NOT NULL
 );
 
 ALTER TABLE posto_conveniado ADD CONSTRAINT posto_conveniado_pk PRIMARY KEY ( cd_posto );
@@ -78,7 +80,8 @@ ALTER TABLE tipo_veiculo ADD CONSTRAINT tipo_veiculo_pk PRIMARY KEY ( cd_tipovei
 CREATE TABLE unidade (
     cd_unidade   NUMBER(6) NOT NULL,
     in_ativa     CHAR(1) NOT NULL,
-    nm_municipio VARCHAR2(50) NOT NULL
+    nm_municipio VARCHAR2(50) NOT NULL,
+    id_pessoa    NUMBER(7) NOT NULL
 );
 
 ALTER TABLE unidade ADD CONSTRAINT unidade_pk PRIMARY KEY ( cd_unidade );
@@ -102,7 +105,6 @@ CREATE TABLE veiculo (
     dt_baixa            DATE,
     qt_capacidadetanque INTEGER NOT NULL,
     in_ativo            CHAR(1) NOT NULL,
-    cd_unidade          NUMBER(6) NOT NULL,
     cd_tipoveiculo      NUMBER(3) NOT NULL,
     cd_tipocombustivel  NUMBER(3) NOT NULL
 );
@@ -121,54 +123,53 @@ ALTER TABLE veiculo_motorista
                                                       cd_motorista,
                                                       dt_vinculo );
 
---  ERROR: FK name length exceeds maximum allowed length(30) 
 ALTER TABLE abastecimento
-    ADD CONSTRAINT abastecimento_posto_conveniado_fk FOREIGN KEY ( cd_posto )
+    ADD CONSTRAINT abast_motorista_fk FOREIGN KEY ( cd_motorista )
+        REFERENCES motorista ( nr_matricula );
+
+ALTER TABLE abastecimento
+    ADD CONSTRAINT abast_posto_fk FOREIGN KEY ( cd_posto )
         REFERENCES posto_conveniado ( cd_posto );
+
+ALTER TABLE abastecimento
+    ADD CONSTRAINT abast_tipo_combustivel_fk FOREIGN KEY ( cd_tipocombustivel )
+        REFERENCES tipo_combustivel ( cd_tipocombustivel );
+
+ALTER TABLE abastecimento
+    ADD CONSTRAINT abast_veiculo_fk FOREIGN KEY ( id_veiculo )
+        REFERENCES veiculo ( id_veiculo );
 
 ALTER TABLE motorista
     ADD CONSTRAINT motorista_cargo_motorista_fk FOREIGN KEY ( cd_cargo )
         REFERENCES cargo_motorista ( cd_cargo );
 
 ALTER TABLE motorista
-    ADD CONSTRAINT motorista_pessoa_fk FOREIGN KEY ( nr_matricula )
+    ADD CONSTRAINT motorista_pessoa_fk FOREIGN KEY ( id_pessoa )
         REFERENCES pessoa ( id_pessoa );
 
 ALTER TABLE posto_conveniado
-    ADD CONSTRAINT posto_conveniado_pessoa_fk FOREIGN KEY ( cd_posto )
+    ADD CONSTRAINT posto_conveniado_pessoa_fk FOREIGN KEY ( id_pessoa )
         REFERENCES pessoa ( id_pessoa );
 
-ALTER TABLE abastecimento
-    ADD CONSTRAINT table_10_motorista_fk FOREIGN KEY ( cd_motorista )
-        REFERENCES motorista ( nr_matricula );
-
-ALTER TABLE abastecimento
-    ADD CONSTRAINT table_10_tipo_combustivel_fk FOREIGN KEY ( cd_tipocombustivel )
-        REFERENCES tipo_combustivel ( cd_tipocombustivel );
-
-ALTER TABLE abastecimento
-    ADD CONSTRAINT table_10_veiculo_fk FOREIGN KEY ( id_veiculo )
-        REFERENCES veiculo ( id_veiculo );
-
 ALTER TABLE unidade_veiculo
-    ADD CONSTRAINT table_11_unidade_fk FOREIGN KEY ( cd_unidade )
+    ADD CONSTRAINT und_unidade_fk FOREIGN KEY ( cd_unidade )
         REFERENCES unidade ( cd_unidade );
 
 ALTER TABLE unidade_veiculo
-    ADD CONSTRAINT table_11_veiculo_fk FOREIGN KEY ( id_veiculo )
-        REFERENCES veiculo ( id_veiculo );
-
-ALTER TABLE veiculo_motorista
-    ADD CONSTRAINT table_9_motorista_fk FOREIGN KEY ( cd_motorista )
-        REFERENCES motorista ( nr_matricula );
-
-ALTER TABLE veiculo_motorista
-    ADD CONSTRAINT table_9_veiculo_fk FOREIGN KEY ( id_veiculo )
+    ADD CONSTRAINT und_veiculo_fk FOREIGN KEY ( id_veiculo )
         REFERENCES veiculo ( id_veiculo );
 
 ALTER TABLE unidade
-    ADD CONSTRAINT unidade_pessoa_fk FOREIGN KEY ( cd_unidade )
+    ADD CONSTRAINT unidade_pessoa_fk FOREIGN KEY ( id_pessoa )
         REFERENCES pessoa ( id_pessoa );
+
+ALTER TABLE veiculo_motorista
+    ADD CONSTRAINT veic_motorista_fk FOREIGN KEY ( cd_motorista )
+        REFERENCES motorista ( nr_matricula );
+
+ALTER TABLE veiculo_motorista
+    ADD CONSTRAINT veic_veiculo_fk FOREIGN KEY ( id_veiculo )
+        REFERENCES veiculo ( id_veiculo );
 
 ALTER TABLE veiculo
     ADD CONSTRAINT veiculo_tipo_combustivel_fk FOREIGN KEY ( cd_tipocombustivel )
@@ -220,5 +221,5 @@ ALTER TABLE veiculo
 -- ORDS ENABLE SCHEMA                       0
 -- ORDS ENABLE OBJECT                       0
 -- 
--- ERRORS                                   1
+-- ERRORS                                   0
 -- WARNINGS                                 0
