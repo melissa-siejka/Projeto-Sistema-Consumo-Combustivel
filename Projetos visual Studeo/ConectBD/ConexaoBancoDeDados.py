@@ -1,10 +1,10 @@
 
-#lass CDBanco():
+#class CDBanco():
 import cx_Oracle
 from sqlalchemy.ext.declarative import declarative_base
 from urllib.parse import quote
 from sqlalchemy import create_engine, text
-from sqlalchemy.orm import scoped_session, sessionmaker, declarative_base, Session
+from sqlalchemy.orm import scoped_session, sessionmaker, DeclarativeBase, Session
 
 lib_dir = r"C:\Users\mayqu\APP Oracle\instantclient_21_13"
 cx_Oracle.init_oracle_client(lib_dir=lib_dir)
@@ -19,21 +19,19 @@ instance = f"oracle+cx_oracle://{USER}:{PASSWD}@{sid}"
 engine = create_engine(url=instance, echo=True, max_identifier_length=30)
 session = scoped_session(sessionmaker(bind=engine, autoflush=True, autocommit=False))
 
-cad= Session.execute("INSERT INTO POSTO_CONVENIADO (cd_posto, nm_posto, cnpj, dt_convenio, in_ativo) VALUES (;")
+#cad = Session.execute(text("INSERT INTO POSTO_CONVENIADO (cd_posto, nm_posto, cnpj, dt_convenio, in_ativo) VALUES( 'Andrade', '12365498712545', '22/03/2023', 't') );"))
         
-Session.commit(cad)
-Session.close(cad)
 
-teste = session.execute(text('SELECT * FROM pessoa'))
+#teste = session.execute(text('SELECT * FROM pessoa'))
 
-for i in teste:
-    print(i)
+#for i in teste:
+#    print(i)
 
 from sqlalchemy.orm import mapped_column, Mapped, DeclarativeBase
 from sqlalchemy import INTEGER, VARCHAR, CHAR, Date, NUMERIC, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.schema import Sequence
-from datetime import date
+from datetime import datetime, date
 
 class Base(DeclarativeBase):
     pass
@@ -131,45 +129,35 @@ class Abastecimento(Base):
     cd_tipocombustivel:Mapped[float]=mapped_column(NUMERIC(3),ForeignKey(TipoCombustivel.cd_tipocombustivel),nullable=False)
     nr_reqastecimento:Mapped[int]=mapped_column(INTEGER,nullable=False, primary_key=True)
     nr_hodometro:Mapped[float]=mapped_column(NUMERIC(7),nullable=False)
-    dt_abastecimento:Mapped[date]=mapped_column(Date, nullable=False)  
+    dt_abastecimento:Mapped[datetime]=mapped_column(Date, nullable=False)  
     qt_litros:Mapped[float]=mapped_column(NUMERIC(5,2), nullable=False)
     vl_combustivel:Mapped[float]=mapped_column(NUMERIC(5,2), nullable=False)
 
 
 Base.metadata.create_all(engine)
 
-# def cadastraCargo():
-#     novoCargo = CargoMotorista(cd_cargo=4, ds_cargo ="Operador")
-#     session.add(novoCargo)
-#     session.commit()
-#     print(novoCargo)
+def cadastrar_pessoa(session, nm_pessoa, nr_cpfcnpj, nr_cep, ds_endereco):
+    pessoa = Pessoa(
+        nm_pessoa=nm_pessoa,
+        nr_cpfcnpj=nr_cpfcnpj,
+        nr_cep=nr_cep,
+        ds_endereco=ds_endereco
+    )
+    session.add(pessoa)
+    session.commit()
 
-# def CadastrarAbastecimento(id_veiculo, cd_motorista, cd_posto, cd_tipocombustivel, nr_reqastecimento,  nr_hodometro, dt_abastecimento, qt_litros,  vl_combustive ):
-#     try:
-#         id = session.execute(text('SELECT * FROM abastecimento'))
-#         litros = session.execute(text('SELECT * FROM abastecimento')) 
-#         hodometro = session.execute(text('SELECT * FROM abastecimento'))
-#         litros = session.execute(text('SELECT * FROM abastecimento'))
+def cadastrar_tipo_combustivel(session, ds_tipocombustivel):
+    tipo_combustivel = TipoCombustivel(
+        ds_tipocombustivel=ds_tipocombustivel
+    )
+    session.add(tipo_combustivel)
 
-#         if id == False:
-#             print("ID do veículo não encontrado")
-#         elif hodometro > nr_hodometro :
-#             print("Valor de Hodometro inválido!")
-#         elif litros > qt_litros:
-#             print("Verifique a quantidade de combustivel!")
+# Implemente funções semelhantes para cada classe restante
 
-#         else:
-#             novoAbastecimento
+# Exemplo de uso das funções de cadastro
+# Supondo que você já tenha uma sessão criada e pronta para uso
+# session = ...
 
-#         session.add(novoAbastecimento)
-#         session.commit()
-#     except Exception:
-#         print("Verifique dados digitados")
-
-# teste2 = session.execute(text('SELECT * FROM abastecimento'))
-
-# for i in teste2:
-#     print (i)
-
-
-
+cadastrar_pessoa(session, 'João da Silva', '12345678901', '12345678', 'Rua ABC, 123')
+cadastrar_tipo_combustivel(session, 'Gasolina')
+# Chame as demais funções para cadastrar instâncias das outras classes
