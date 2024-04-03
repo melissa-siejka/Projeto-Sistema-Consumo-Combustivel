@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import ttk
 import os
 
 TelaRelatorio = Tk()
@@ -27,6 +28,7 @@ class Application(FuncaoTela):
         self.tela()
         self.frameTela()
         self.BotaoTela()
+        self.ResultadoPesquisa()
         TelaRelatorio.mainloop()
 
 
@@ -75,9 +77,11 @@ class Application(FuncaoTela):
         # Tipo de Veículo
         self.lb_TpVeiculo= Label(self.TelaRelatorio, text='Tipo de Veículo', font=('Segoe UI Semibold', 10), bg ='#D6FADC', fg='black')
         self.lb_TpVeiculo.place(relx=0.57, rely=0.20, relwidth=0.15, relheight=0.03)
-        self.TpVeiculo_entry = Entry(self.TelaRelatorio, font=('Segoe UI Semibold', 9), highlightthickness=1, highlightbackground='#BFBFBF')
-        self.TpVeiculo_entry.place(relx=0.57, rely=0.23 ,relwidth=0.15, relheight=0.05)
-
+        self.Tipvar = StringVar(self.TelaRelatorio)
+        self.TipV = ("Leve", "Médio","Pesado")
+        self.Tipvar.set('Leve')
+        self.popupMenu = OptionMenu (self.TelaRelatorio, self.Tipvar, *self.TipV)
+        self.popupMenu.place(relx=0.57, rely=0.23 ,relwidth=0.15, relheight=0.05)
 
         # Veículo
         self.lb_IdVeiculo= Label(self.TelaRelatorio, text='Id Veículo', font=('Segoe UI Semibold', 10), bg ='#D6FADC', fg='black')
@@ -85,8 +89,29 @@ class Application(FuncaoTela):
         self.IdVeiculo_entry = Entry(self.TelaRelatorio, font=('Segoe UI Semibold', 9), highlightthickness=1, highlightbackground='#BFBFBF')
         self.IdVeiculo_entry.place(relx=0.73, rely=0.23 ,relwidth=0.15, relheight=0.05)
 
+        #Lista de resultado
 
+    def ResultadoPesquisa (self):
+        self.ConsumoComb = ttk.Treeview(self.frameResultado, height= 3, column = ('col1', 'col2', 'col3', 'col4', 'col5', 'col6'))
+        self.ConsumoComb.heading("#0", text = "Veículo")
+        self.ConsumoComb.heading("#1", text = "Data Abastecimento")
+        self.ConsumoComb.heading("#2", text = "Motorista")
+        self.ConsumoComb.heading("#3", text = "Litros")
+        self.ConsumoComb.heading("#4", text = "Km Rodado")
+        self.ConsumoComb.heading("#5", text = "Média Km/L")
 
+        self.ConsumoComb.column("#0", width=80)
+        self.ConsumoComb.column("#1", width=150)
+        #self.ConsumoComb.column("#2", width=70)
+        #self.ConsumoComb.column("#3", width=80)
+        #self.ConsumoComb.column("#4", width=80)
+        #self.ConsumoComb.column("#5", width=80)
+        self.ConsumoComb.column("#5", width=90)
 
+        self.ConsumoComb.place(relx=0.00, rely = 0.00, relwidth=1.00, relheight=0.1)
+
+        self.scroolConsumoComb = Scrollbar(self.frameResultado, orient='vertical')
+        self.ConsumoComb.configure(yscroll= self.scroolConsumoComb.set)
+        self.scroolConsumoComb.place(relx=0.95, rely=0.1, relwidth= 0.04, relheight = 0.85)
 
 Application()

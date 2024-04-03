@@ -38,9 +38,6 @@ class Application2(FuncaoTela):
     # Botão Limpar
         self.Limpar = Button(self.TelaCadastroVeiculo, text='Limpar',bg='#D6FADC',font=('Arial', 9), fg='black', command=self.limpaTela)
         self.Limpar.place(relx=0.80, rely=0.78, relwidth=0.1, relheight=0.05)
-        # Botão Buscar
-        self.Buscar = Button(self.TelaCadastroVeiculo, text='Buscar',bg='#FCB546',font=('Arial', 9), fg='black')
-        self.Buscar.place(relx=0.80, rely=0.11, relwidth=0.1, relheight=0.05)
         # Botão Novo Registro
         self.Novo = Button(self.TelaCadastroVeiculo, text='Inserir novo registro',bg='#D6FADC',font=('Arial', 9), fg='black')  #
         self.Novo.place(relx=0.11, rely=0.78, relwidth=0.13, relheight=0.05)

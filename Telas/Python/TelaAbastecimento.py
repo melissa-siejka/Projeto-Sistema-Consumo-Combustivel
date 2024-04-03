@@ -40,9 +40,6 @@ class Application(FuncaoTela):
     # Botão Limpar
         self.Limpar = Button(self.TelaAbastecimento, text='Limpar',bg='#D6FADC',font=('Arial', 9), fg='black', command=self.limpaTela)
         self.Limpar.place(relx=0.80, rely=0.78, relwidth=0.1, relheight=0.05)
-        # Botão Buscar
-        self.Buscar = Button(self.TelaAbastecimento, text='Buscar',bg='#FCB546',font=('Arial', 9), fg='black')  # Indica em qual frame estará o botão, com o texto informando a sua função
-        self.Buscar.place(relx=0.80, rely=0.11, relwidth=0.1, relheight=0.05)
         # Botão Novo Registro
         self.Novo = Button(self.TelaAbastecimento, text='Inserir novo registro',bg='#D6FADC',font=('Arial', 9), fg='black')  # Indica em qual frame estará o botão, com o texto informando a sua função
         self.Novo.place(relx=0.11, rely=0.78, relwidth=0.13, relheight=0.05)
@@ -66,8 +63,11 @@ class Application(FuncaoTela):
         # Tipo de combustível
         self.lb_TipoCombustivel = Label(self.TelaAbastecimento, text='TIPO DE COMBUSTÍVEL',font=('Segoe UI Semibold', 10), bg = '#00602C',fg='white')
         self.lb_TipoCombustivel.place(relx=0.70, rely=0.24, relwidth=0.15, relheight=0.04)
-        self.TipoCombustivel_entry = Entry(self.TelaAbastecimento, font=('Segoe UI Semibold',9), highlightthickness=1, highlightbackground='#BFBFBF')
-        self.TipoCombustivel_entry.place(relx=0.70, rely=0.28, relwidth=0.15, relheight=0.05)
+        self.Tipvar = StringVar(self.TelaAbastecimento)
+        self.TipV = ("Diesel S10", "Diesel S500","Etanol","Gasolina","GLP")
+        self.Tipvar.set('Diesel S10')
+        self.popupMenu = OptionMenu (self.TelaAbastecimento, self.Tipvar, *self.TipV)
+        self.popupMenu.place(relx=0.70, rely=0.28, relwidth=0.15, relheight=0.05)
 
         # Data abastecimento
         self.lb_DtAbastecimento= Label(self.TelaAbastecimento, text='DATA ABASTECIMENTO',font=('Segoe UI Semibold', 10),bg = '#00602C',fg='white')
